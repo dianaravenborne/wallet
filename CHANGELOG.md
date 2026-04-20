@@ -32,6 +32,9 @@ be considered breaking changes.
   not defined.
 - Zallet now refuses to open wallet databases from incompatible earlier alpha
   releases instead of attempting to migrate them.
+- `zallet migrate-zcashd-wallet` now migrates transparent addresses that were
+  added to the `zcashd` wallet via `importpubkey` or `importaddress
+  <redeemScript>`.
 
 ## [0.1.0-alpha.3] - 2025-12-15
 
