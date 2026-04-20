@@ -8546,7 +8546,7 @@ dependencies = [
 [[package]]
 name = "zewif"
 version = "0.1.0"
-source = "git+https://github.com/zcash/zewif.git?rev=f84f80612813ba00a0a8a9a5f060bd217fa981cc#f84f80612813ba00a0a8a9a5f060bd217fa981cc"
+source = "git+https://github.com/zcash/zewif.git?rev=798d7b3554ebada05bea63b67ee66f9c2558a21a#798d7b3554ebada05bea63b67ee66f9c2558a21a"
 dependencies = [
  "anyhow",
  "bc-components",
@@ -8560,7 +8560,7 @@ dependencies = [
 [[package]]
 name = "zewif-zcashd"
 version = "0.1.0"
-source = "git+https://github.com/zcash/zewif-zcashd.git?rev=9c72d1805c269f88ea5caa4eb33c6d38013b9776#9c72d1805c269f88ea5caa4eb33c6d38013b9776"
+source = "git+https://github.com/nullcopy/zewif-zcashd.git?rev=cb2efe7f49b97f10d62100db3adcacbae31c28b1#cb2efe7f49b97f10d62100db3adcacbae31c28b1"
 dependencies = [
  "anyhow",
  "bitflags 2.10.0",
@@ -8572,6 +8572,7 @@ dependencies = [
  "orchard 0.10.2",
  "ripemd 0.1.3",
  "sapling-crypto 0.3.0",
+ "secp256k1 0.27.0",
  "sha2 0.10.9",
  "uuid",
  "zcash_address 0.6.3",
