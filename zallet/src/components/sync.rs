@@ -546,6 +546,11 @@ pub(crate) async fn fetch_transparent_utxos(
         debug!("{address} has UTXO in tx {txid} at index {}", index.index());
 
         let mined_height = BlockHeight::from_u32(mined_height.0);
+        // We pass `None` for `recipient_account`, `recipient_key_scope`, and
+        // `funding_account` here: the sqlite layer's `put_received_transparent_utxo`
+        // re-derives the recipient account/scope from the wallet's address->account
+        // mapping using the UTXO's recipient address, and the funding account is
+        // not known at sync ingest time.
         let output = WalletTransparentOutput::from_parts(
             OutPoint::new(txid.0, index.index()),
             TxOut::new(
@@ -553,6 +558,9 @@ pub(crate) async fn fetch_transparent_utxos(
                 Script(script::Code(script.as_raw_bytes().to_vec())),
             ),
             Some(mined_height),
+            None,
+            None,
+            None,
         )
         .expect("the UTXO was detected via a supported address kind");
 
