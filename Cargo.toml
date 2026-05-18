@@ -161,6 +161,24 @@ anyhow = "1.0"
 tonic = "0.14"
 
 [patch.crates-io]
+# TEMPORARY: Pin librustzcash crates to the merge commit of PR #2353
+# (zcash/librustzcash@541f5b562e) so that we can consume the new
+# `propose_shielding_coinbase` API used by `z_shieldcoinbase`. Drop this
+# block when librustzcash crates are released to crates.io at a version
+# that includes that API.
+equihash = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+f4jumble = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+transparent = { package = "zcash_transparent", git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_address = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_client_backend = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_client_sqlite = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_encoding = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_history = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_keys = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_primitives = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_proofs = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+zcash_protocol = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+
 # TEMPORARY: All `core2` versions on crates.io were yanked by upstream on
 # 2026-04-14, breaking fresh dependency resolution because we still pull
 # `core2 ^0.3` (via `equihash 0.2.2`) and `core2 ^0.4` (via `zaino-state`)
