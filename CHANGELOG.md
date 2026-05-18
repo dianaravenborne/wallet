@@ -35,6 +35,9 @@ be considered breaking changes.
 - `zallet migrate-zcashd-wallet` now migrates transparent addresses that were
   added to the `zcashd` wallet via `importpubkey` or `importaddress
   <redeemScript>`.
+- `zallet migrate-zcashd-wallet` now migrates view-only Sapling keys that were
+  added to the `zcashd` wallet via `z_importviewingkey`. Each imported viewing
+  key becomes its own view-only account.
 
 ## [0.1.0-alpha.3] - 2025-12-15
 
