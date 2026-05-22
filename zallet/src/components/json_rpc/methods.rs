@@ -62,6 +62,8 @@ mod z_get_total_balance;
 mod z_import_address;
 #[cfg(zallet_build = "wallet")]
 mod z_send_many;
+#[cfg(zallet_build = "wallet")]
+mod z_shieldcoinbase;
 
 /// The general JSON-RPC interface, containing the methods provided in all Zallet builds.
 #[rpc(server)]
@@ -561,6 +563,49 @@ pub(crate) trait WalletRpc {
         fee: Option<JsonValue>,
         privacy_policy: Option<String>,
     ) -> z_send_many::Response;
+
+    /// Shields coinbase UTXOs from a single wallet-owned source into a
+    /// shielded address.
+    ///
+    /// This is an asynchronous operation; it returns an operation id that
+    /// can be used with `z_getoperationstatus` or `z_getoperationresult`.
+    ///
+    /// # Arguments
+    /// - `fromaddresses`: Either an array of transparent addresses owned by
+    ///   this wallet (all of which must belong to the same account), or a
+    ///   single account UUID (string) to sweep every coinbase UTXO across
+    ///   that account's transparent receivers.
+    /// - `toaddress`: Any Zcash shielded address (Sapling, Orchard, or
+    ///   Unified with a shielded receiver) that will receive the shielded
+    ///   funds. Need not belong to this wallet. Transparent / TEX
+    ///   destinations are rejected by the backend.
+    /// - `limit` (numeric, optional): If supplied, caps the number of
+    ///   selected coinbase UTXOs to the highest-value `n` of those
+    ///   eligible. Recommended for wallets with many eligible coinbase
+    ///   UTXOs: without it, a single transaction is built containing all
+    ///   eligible UTXOs, which can exceed transaction-size limits at
+    ///   broadcast time.
+    /// - `memo` (string, optional): If supplied, stored in the memo field
+    ///   of the resulting shielded payment. Hex-encoded, up to 1024 hex
+    ///   characters (= 512 bytes).
+    ///
+    /// # Returns
+    /// An object matching `zcashd`'s `z_shieldcoinbase` shape:
+    /// - `remainingUTXOs` (numeric): Eligible-but-not-selected coinbase UTXO
+    ///   count.
+    /// - `remainingValue` (numeric, ZEC): Total value of those UTXOs.
+    /// - `shieldingUTXOs` (numeric): Number of coinbase UTXOs being
+    ///   shielded by this operation.
+    /// - `shieldingValue` (numeric, ZEC): Total value being shielded.
+    /// - `opid` (string): Operation id.
+    #[method(name = "z_shieldcoinbase")]
+    async fn z_shieldcoinbase(
+        &self,
+        fromaddresses: JsonValue,
+        toaddress: String,
+        limit: Option<u32>,
+        memo: Option<String>,
+    ) -> z_shieldcoinbase::Response;
 }
 
 pub(crate) struct RpcImpl {
@@ -896,5 +941,26 @@ impl WalletRpcServer for WalletRpcImpl {
                 .await?,
             )
             .await)
+    }
+
+    async fn z_shieldcoinbase(
+        &self,
+        fromaddresses: JsonValue,
+        toaddress: String,
+        limit: Option<u32>,
+        memo: Option<String>,
+    ) -> z_shieldcoinbase::Response {
+        let (preflight, context, fut) = z_shieldcoinbase::call(
+            self.wallet().await?,
+            self.keystore.clone(),
+            self.chain().await?,
+            fromaddresses,
+            toaddress,
+            limit,
+            memo,
+        )
+        .await?;
+        let opid = self.start_async((context, fut)).await;
+        Ok(z_shieldcoinbase::ShieldCoinbaseResult::new(preflight, opid))
     }
 }
