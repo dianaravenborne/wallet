@@ -546,7 +546,7 @@ pub(crate) async fn fetch_transparent_utxos(
         debug!("{address} has UTXO in tx {txid} at index {}", index.index());
 
         let mined_height = BlockHeight::from_u32(mined_height.0);
-        // We pass `None` for `recipient_account`, `recipient_key_scope`, and
+        // Pass `None` for `recipient_account`, `recipient_key_scope`, and
         // `funding_account` here: the sqlite layer's `put_received_transparent_utxo`
         // re-derives the recipient account/scope from the wallet's address->account
         // mapping using the UTXO's recipient address, and the funding account is
