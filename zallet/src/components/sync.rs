@@ -42,6 +42,7 @@ use std::time::Duration;
 
 use futures::StreamExt as _;
 use jsonrpsee::tracing::{self, debug, info, warn};
+use rusqlite::OptionalExtension;
 use tokio::{sync::Notify, time};
 use transparent::{
     address::Script,
@@ -582,13 +583,30 @@ pub(crate) async fn fetch_transparent_utxos(
     for (txid, mined_height) in tx_heights {
         // The persisted `transactions` row carries `tx_index = 0` for coinbase
         // (set by `put_tx_data` via `is_coinbase()`) once we have routed the
-        // tx through `decrypt_and_store_transaction` at least once. A non-NULL
-        // `mined_height` is a sufficient indicator that this routing has
-        // happened, as every code path that sets `mined_height` also passes the
-        // parsed `Transaction` through `put_tx_data`. Reorgs reset
-        // `mined_height` (and `tx_index`) to NULL, so re-confirmation correctly
-        // re-runs the second pass.
-        if db_data.get_tx_height(txid)?.is_some() {
+        // tx through `decrypt_and_store_transaction` at least once. We can't
+        // gate on `get_tx_height` here: `put_received_transparent_utxo` (which
+        // ran in the first pass just above) already inserted the `transactions`
+        // row with a non-NULL `mined_height` and a NULL `tx_index`, so that
+        // signal would short-circuit the enhancement on the very first pass.
+        // Instead, check `tx_index` directly: if it's already non-NULL, the
+        // tx has been enhanced and either is or isn't coinbase definitively.
+        // Reorgs reset `tx_index` to NULL, so re-confirmation correctly re-runs
+        // the second pass.
+        //
+        // The downside is that non-coinbase transparent-only txs (whose
+        // `tx_index` stays NULL) are re-fetched on every poll. This is
+        // acceptable: in steady state most observed UTXOs are coinbase
+        // (mining) or already-enhanced (previously seen), and a failed
+        // re-fetch is logged-and-skipped so it can't wedge sync.
+        let tx_index_known = db_data.with_raw(|conn, _params| {
+            conn.query_row(
+                "SELECT tx_index IS NOT NULL FROM transactions WHERE txid = :txid",
+                rusqlite::named_params![":txid": &txid.as_ref()[..]],
+                |row| row.get::<_, bool>(0),
+            )
+            .optional()
+        }).map_err(zcash_client_sqlite::error::SqliteClientError::from)?;
+        if tx_index_known.unwrap_or(false) {
             continue;
         }
         let tx_obj = match chain.get_raw_transaction(txid.to_string(), Some(1)).await {
