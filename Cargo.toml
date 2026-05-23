@@ -161,23 +161,23 @@ anyhow = "1.0"
 tonic = "0.14"
 
 [patch.crates-io]
-# TEMPORARY: Pin librustzcash crates to the merge commit of PR #2353
-# (zcash/librustzcash@541f5b562e) so that we can consume the new
+# TEMPORARY: Pin librustzcash crates to PR #2376
+# (zcash/librustzcash#2376, head nullcopy/librustzcash@e41d4aa9a8) so that we can consume the new
 # `propose_shielding_coinbase` API used by `z_shieldcoinbase`. Drop this
 # block when librustzcash crates are released to crates.io at a version
 # that includes that API.
-equihash = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-f4jumble = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-transparent = { package = "zcash_transparent", git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_address = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_client_backend = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_client_sqlite = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_encoding = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_history = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_keys = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_primitives = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_proofs = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
-zcash_protocol = { git = "https://github.com/zcash/librustzcash.git", rev = "541f5b562e23da96e040953f6987ddb3d89e871e" }
+equihash = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+f4jumble = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+transparent = { package = "zcash_transparent", git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_address = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_client_backend = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_client_sqlite = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_encoding = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_history = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_keys = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_primitives = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_proofs = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
+zcash_protocol = { git = "https://github.com/nullcopy/librustzcash.git", rev = "e41d4aa9a84cef5d89aac894974c81e1469db2dc" }
 
 # TEMPORARY: All `core2` versions on crates.io were yanked by upstream on
 # 2026-04-14, breaking fresh dependency resolution because we still pull
